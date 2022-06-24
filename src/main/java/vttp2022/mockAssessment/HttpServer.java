@@ -9,7 +9,7 @@ import java.util.List;
 
 public class HttpServer {
     
-    public int port;
+    public static int port;
     public String docRootListString;
     public List<String> docRootList = new LinkedList<>();
     
@@ -39,6 +39,7 @@ public class HttpServer {
         String[] docRootSplit = docRootInput.split(":");
         for (int i = 0;i<docRootSplit.length;i++){
             docRootList.add(docRootSplit[i]);
+            System.out.printf("%d. %s\n",i,docRootSplit[i]);
         }
     }
 
@@ -48,7 +49,7 @@ public class HttpServer {
         System.out.println("Waiting for connection");
         Socket sock = serversocket.accept();
         for(int i=0;i<docRootList.size();i++){
-            
+
         }
     }
 }

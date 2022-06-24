@@ -17,17 +17,17 @@ public class App
         int portdefault = 3000;
         String docRootdefault = "./target";
         boolean stop = false;
-        if(args.length>3){ //more than 3 args
-            if (args[0]=="--port"){ // change default port and docRoot
+        if(args.length>2){ //more than 3 args
+            if (args[0].equals("--port")){ // change default port and docRoot
                 portdefault = Integer.parseInt(args[1]);
             }
-            if (args[2]=="--docRoot"){
+            if (args[2].equals("--docRoot")){
                 docRootdefault = args[3];
             }
         }else if(args.length>0){ //has arguments
-            if (args[0]=="--port"){ //
+            if (args[0].equals("--port")){ //
                 portdefault = Integer.parseInt(args[1]);
-            }else if(args[0]=="--docRoot"){
+            }else if(args[0].equals("--docRoot")){
                 docRootdefault = args[1];
             }
         }
@@ -40,7 +40,6 @@ public class App
 
         while(!stop){
 
-            
         }
 
     }
