@@ -17,7 +17,7 @@ public class App
         int portdefault = 3000;
         String docRootdefault = "./static";
         boolean stop = false;
-        for (int i=0;i<(args.length-1);i++){
+        for (int i=0;i<(args.length);i++){
             if(args[i].equals("--port")){
                 portdefault = Integer.parseInt(args[i+1]);
                 System.out.println(portdefault);
@@ -30,14 +30,13 @@ public class App
         System.out.printf("Port is %d and docRoot is %s\n",portdefault,docRootdefault);
 
         HttpServer Server = new HttpServer(portdefault,docRootdefault);
-        System.out.println("Server variables initiated, starting server");
+        System.out.printf("Server variables initiated, starting server at port %d.\n",portdefault);
         Server.start();
-        System.out.println("Server port and resource checked, starting server with 3 threads");
+        System.out.println("Server port and resource checked, limiting server to 3 threads");
         ExecutorService threadPool = Executors.newFixedThreadPool(3);
-
+        ServerSocket serversocket = new ServerSocket(portdefault);
 
         while(!stop){
-            ServerSocket serversocket = new ServerSocket(portdefault);
             System.out.println("Waiting for connection\n");
             Socket sock = serversocket.accept();
             HttpClientConnection clientHandlingServer = new HttpClientConnection(sock, Server.docRootList);

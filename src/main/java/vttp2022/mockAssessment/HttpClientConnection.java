@@ -1,6 +1,7 @@
 package vttp2022.mockAssessment;
 //
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,17 +28,25 @@ public class HttpClientConnection implements Runnable{
         String response = "";
         try{
             NetIO = new NetworkIO(sock);
-            req = NetIO.read();
-            System.out.printf("Client wants to %s", req);
+            try{req = NetIO.read();}catch(EOFException e){ //code for end of file exception, try another way to handle
+                
+            }
+            System.out.printf("Client wants to %s\n", req);
             String[] cmmdList = req.split(" ");
+            String resource = cmmdList[1];
+            System.out.println(resource);
+            for(int i=0;i<cmmdList.length; i++){
+                System.out.println(cmmdList[i]);
+            }
             if(!cmmdList[0].equals("GET")){
-                System.out.println("Not GET method");
+                System.out.println("Not GET method\n");
                 response = "HTTP/1.1 405 Method Not Allowed\r\n\r\n"+cmmdList[0]+"not supported\r\n";
                 NetIO.write(response);
                 NetIO.close();
             }
             else{//maybe should do a equals GET here
-                String resource = cmmdList[1];
+                System.out.println("asdasdasd");
+                System.out.println(resource);
                 boolean resourceFound = false;
                 if(resource.equals("/")){
                     resource = "/index.html";
@@ -45,18 +54,24 @@ public class HttpClientConnection implements Runnable{
                 for(int i=0;i<docRootList.size();i++){
                     File docRootFile = new File(docRootList.get(i));
                     List<String> resourcesList = Arrays.asList(docRootFile.list());
-                    if (resourcesList.contains(resource)){
+                    System.out.println("files in this direcotry");
+                    for(int j=0; j<resourcesList.size();j++){
+                        System.out.println(resourcesList.get(j));
+                    }
+                    if (resourcesList.contains(resource.replace("/", ""))){ //convert resource from /index.html to index.html
                         resourceFound = true;
                     }
                 }
+                System.out.println(resourceFound);
                 if (!resourceFound){
                     response = "HTTP/1.1 404 Not Found\r\n\r\n"+resource+"not found\r\n";
+                    System.out.println(response);
                     NetIO.write(response);
                     NetIO.close();
                 }else{
-                    //File resourceF = new File(resource);
+                    System.out.println("asdasdasd4");
                     StringBuilder html = new StringBuilder();
-                    FileReader fr = new FileReader(resource);
+                    FileReader fr = new FileReader(resource.replace("/", "")); //able to find resource but unable to reach file here, find a way to get into the correct folder and get the index.html
                     BufferedReader br = new BufferedReader(fr);
                     String val;
                     while((val = br.readLine())!=null){

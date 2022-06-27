@@ -14,11 +14,11 @@ public class HttpServer{
 
     public HttpServer(int portInput, String docRootInput){
         port = portInput;
-        System.out.println(port);
+        System.out.printf("Port number %d requested\n",port);
         String[] docRootSplit = docRootInput.split(":");
         for (int i = 0;i<docRootSplit.length;i++){
             docRootList.add(docRootSplit[i]);
-            System.out.printf("%d. %s\n",i,docRootSplit[i]);
+            System.out.printf("Directory %d. %s requested\n",i+1,docRootSplit[i]);
         }
     }
 
@@ -38,9 +38,8 @@ public class HttpServer{
                 System.out.println("Path cannot be read");
                 System.exit(1);
             }
-            System.out.printf("%s directory exists and can be read\n",docRootList.get(i));
+            System.out.printf("%s exists, is a directory and can be read\n",docRootList.get(i));
         }
-    }
-    
+    }   
 }
 
