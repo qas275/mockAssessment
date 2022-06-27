@@ -1,5 +1,5 @@
 package vttp2022.mockAssessment;
-
+//
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -17,7 +17,6 @@ public class HttpClientConnection implements Runnable{
     public HttpClientConnection(Socket sockinput, List<String> docList){
         sock = sockinput;
         docRootList = docList;
-
     }
 
     @Override
@@ -71,7 +70,6 @@ public class HttpClientConnection implements Runnable{
                         response = "HTTP/1.1 200 OK\r\nContent-Type: image/png\r\n\r\n" + result;
                     }
                     NetIO.write(response);
-                    
                     NetIO.close();
                 }
             }
