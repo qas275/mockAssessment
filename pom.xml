@@ -54,7 +54,7 @@
           <configuration>
             <archive>
               <manifest>
-                <mainClass>vttp2022.projects.App</mainClass>
+                <mainClass>vttp2022.mockAssessment.App</mainClass>
               </manifest>
             </archive>
           </configuration>
