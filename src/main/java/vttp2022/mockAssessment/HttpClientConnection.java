@@ -1,7 +1,6 @@
 package vttp2022.mockAssessment;
 //
 import java.io.BufferedReader;
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
