@@ -16,25 +16,27 @@ public class HttpClientConnection implements Runnable{
     
     public Socket sock;
     public List<String> docRootList = new LinkedList<>();
-    public String FileHTML;
+    public String FileHTMLorPNG;
 
     public HttpClientConnection(Socket sockinput, List<String> docList){
         sock = sockinput;
         docRootList = docList;
     }
 
-    @Override
+    @Override //must do an override of run when implementing runnable, only runs when submitted to threadpool
     public void run(){
         System.out.println("Starting a client thread");
         NetworkIO NetIO = null;
         String req = "";
         String response = "";
         try{
-            OutputStream os = sock.getOutputStream();
+            OutputStream os = sock.getOutputStream(); //can either write this as a write method in NetIO class or here
             NetIO = new NetworkIO(sock);
-            try{req = NetIO.read();}catch(EOFException e){ //code for end of file exception, try another way to handle
-                
-            }
+            // try{req = NetIO.read();}catch(EOFException e){}  //previously used this because NetIO from kenneth uses readUTF 
+                                                                //which hits EOFException 
+                                                                //but now modded his readUTF to readline 
+                                                                //as task only requires first line from http as request
+            req = NetIO.read();
             System.out.printf("Client wants to %s\n", req);
             String[] cmmdList = req.split(" ");
             String resource = cmmdList[1];
@@ -45,7 +47,7 @@ public class HttpClientConnection implements Runnable{
             if(!cmmdList[0].equals("GET")){
                 System.out.println("Not GET method\n");
                 response = "HTTP/1.1 405 Method Not Allowed\r\n\r\n"+cmmdList[0]+"not supported\r\n";
-                os.write(response.getBytes());
+                os.write(response.getBytes());//can either write this as a write method in NetIO class or here
                 os.flush();
                 os.close();
                 NetIO.close();
@@ -66,8 +68,8 @@ public class HttpClientConnection implements Runnable{
                     }
                     if (resourcesList.contains(resource)){ //check if resource exists in listed files
                         resourceFound = true;
-                        FileHTML = docRootFile.getName()+"/"+resource;//    static/index.html
-                        System.out.printf("Directory with html is %s.\n", FileHTML);
+                        FileHTMLorPNG = docRootFile.getName()+"/"+resource;// "static/index.html"--> assign path <directory>/<resource> to FileHTMLorPNG as a String
+                        System.out.printf("Directory with html/png is %s.\n", FileHTMLorPNG);
                     }
                 }
                 System.out.println(resourceFound);
@@ -80,8 +82,8 @@ public class HttpClientConnection implements Runnable{
                     NetIO.close();
                 }else{
                     System.out.println("asdasdasd4");
-                    if(resource.contains(".png")){
-                        FileInputStream imageStream = new FileInputStream(FileHTML);
+                    if(resource.contains(".png")){ //run if requested for png
+                        FileInputStream imageStream = new FileInputStream(FileHTMLorPNG);
                         response = "HTTP/1.1 200 OK\r\nContent-Type: image/png\r\n\r\n";
                         os.write(response.getBytes());
                         os.write(imageStream.readAllBytes());
@@ -89,9 +91,9 @@ public class HttpClientConnection implements Runnable{
                         os.close();
                         imageStream.close();
                         NetIO.close();
-                    }else{
+                    }else{ //run if requested for html
                         StringBuilder html = new StringBuilder();
-                        FileReader fr = new FileReader(FileHTML); //able to find resource but unable to reach file here, find a way to get into the correct folder and get the index.html
+                        FileReader fr = new FileReader(FileHTMLorPNG); //able to find resource but unable to reach file here, find a way to get into the correct folder and get the index.html
                         BufferedReader br = new BufferedReader(fr);
                         String htmlString;
                         System.out.println("build string");
@@ -111,7 +113,8 @@ public class HttpClientConnection implements Runnable{
                 }
             }
         }catch(IOException e){
-            e.printStackTrace();
+            System.out.println("IOexception met");
+            System.exit(1);
         }
         
     }

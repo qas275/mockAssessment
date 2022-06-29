@@ -14,27 +14,27 @@ public class HttpServer{
 
     public HttpServer(int portInput, String docRootInput){
         port = portInput;
-        System.out.printf("Port number %d requested\n",port);
-        String[] docRootSplit = docRootInput.split(":");
-        for (int i = 0;i<docRootSplit.length;i++){
-            docRootList.add(docRootSplit[i]);
+        System.out.printf("Port number %d requested\n",port); //assign given port number to port here
+        String[] docRootSplit = docRootInput.split(":"); //split given directories by :
+        for (int i = 0;i<docRootSplit.length;i++){ 
+            docRootList.add(docRootSplit[i]); //add directories into list here
             System.out.printf("Directory %d. %s requested\n",i+1,docRootSplit[i]);
         }
     }
 
 
     public void start(){
-        for(int i=0;i<docRootList.size();i++){
-            File docRootFile = new File(docRootList.get(i));
-            if (!docRootFile.exists()){
+        for(int i=0;i<docRootList.size();i++){ //for each directory stated on startup
+            File docRootFile = new File(docRootList.get(i)); //create File 
+            if (!docRootFile.exists()){ //check if file exists
                 System.out.println("Path does not exist");
                 System.exit(1);
             }
-            if (!docRootFile.isDirectory()){
+            if (!docRootFile.isDirectory()){ //is a directory
                 System.out.println("Path is not a directory");
                 System.exit(1);
             }
-            if(!docRootFile.canRead()){
+            if(!docRootFile.canRead()){ //can be read
                 System.out.println("Path cannot be read");
                 System.exit(1);
             }
